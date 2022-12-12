@@ -1,0 +1,22 @@
+{
+  "name": "jsonplaceholder-api",
+  "version": "1.0.0",
+  "description": "\"# jsonplaceholder-api\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/driuzzo/jsonplaceholder-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/driuzzo/jsonplaceholder-api/issues"
+  },
+  "homepage": "https://github.com/driuzzo/jsonplaceholder-api#readme",
+  "dependencies": {
+    "cypress": "^12.0.2"
+  }
+}
