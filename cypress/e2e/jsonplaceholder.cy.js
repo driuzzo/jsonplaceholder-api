@@ -2,11 +2,11 @@
 
 const { faker } = require('@faker-js/faker')
 let postTitle
-const postId = 1
+const postId = 100
 
 describe("happy path api tests", () => {
 
-    it('gets all resources', () => {
+    it('gets all posts', () => {
             
         cy.api('GET', 'https://jsonplaceholder.typicode.com/posts')
             .then((response) => {
@@ -15,18 +15,17 @@ describe("happy path api tests", () => {
             })
     })
 
-    it('gets a todo', () => {
+    it('gets a post', () => {
 
         cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${postId}`)
             .then((response) => {
                 postTitle = response.body.title
                 expect(response.status).to.eq(200)
-                expect(response.body.userId).to.eq(1)
                 cy.wrap(postTitle)
             })
     })
 
-    it('creates a resource', () => {
+    it('creates a post', () => {
 
         const title = faker.random.words(2)
         const body = faker.random.words(4)
@@ -49,7 +48,7 @@ describe("happy path api tests", () => {
         })
     })
 
-    it('updates a resource', () => {
+    it('updates a post', () => {
 
         const title = faker.random.words(2)
         const body = faker.random.words(4)
@@ -69,7 +68,7 @@ describe("happy path api tests", () => {
         })
     })
 
-    it('deletes a resource', () => {
+    it('deletes a post', () => {
 
         cy.api('DELETE', `https://jsonplaceholder.typicode.com/posts/${postId}`)
             .then((response) => {
