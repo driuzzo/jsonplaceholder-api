@@ -1,5 +1,3 @@
-"# jsonplaceholder-api" 
-
 Testes de API com Cypress.
 
 Cypress 12
