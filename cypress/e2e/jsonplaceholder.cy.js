@@ -6,7 +6,7 @@ const { faker } = require('@faker-js/faker')
 
 describe('happy path api tests', () => {
 
-    context('gets all resources', () => {
+    context.skip('gets all resources', () => {
 
         it('gets all posts', () => {
 
@@ -84,15 +84,15 @@ describe('happy path api tests', () => {
     
     context('post tests', () => {
         const postId = 100
-        let postTitle
+        let postObject
 
         it('gets a post', () => {
 
             cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${postId}`)
                 .then((response) => {
-                    postTitle = response.body.title
+                    postObject = response.body
                     expect(response.status).to.eq(200)
-                    cy.wrap(postTitle)
+                    cy.wrap(postObject)
                 })
         })
     
@@ -102,20 +102,15 @@ describe('happy path api tests', () => {
             const body = faker.random.words(4)
             
             cy.api('POST', 'https://jsonplaceholder.typicode.com/posts', {
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                body: {
-                    title: title,
-                    body: body,
-                    userId: 1
-                }
+                userId: 1,        
+                title: title,
+                body: body
             })
             .then((response) => {
-                console.log(response)
                 expect(response.status).to.eq(201)
-                expect(response.body.body.title).to.eq(title)
-                expect(response.body.body.body).to.eq(body)
+                expect(response.body.title).to.eq(title)
+                expect(response.body.body).to.eq(body)
+                expect(response.body.id).to.eq(101)
             })
         })
     
@@ -135,7 +130,24 @@ describe('happy path api tests', () => {
                 expect(response.status).to.eq(200)
                 expect(response.body.body.title).to.eq(title)
                 expect(response.body.body.body).to.eq(body)
-                expect(response.body.body.title).not.to.eq(postTitle)
+                expect(response.body.body.title).not.to.eq(postObject.title)
+                expect(response.body.body.body).not.to.eq(postObject.body)
+            })
+        })
+
+        it('patches a post', () => {
+
+            cy.api('PATCH', `https://jsonplaceholder.typicode.com/posts/${postId}`, {
+                body: {
+                    title: 'foo',
+                    body: 'bar'
+                }
+            })
+            .then((response) => {
+                expect(response.body.body.title).to.eq('foo')
+                expect(response.body.body.body).to.eq('bar')
+                expect(response.body.body.title).not.to.eq(postObject.title)
+                expect(response.body.body.body).not.to.eq(postObject.body)
             })
         })
     
@@ -148,7 +160,7 @@ describe('happy path api tests', () => {
                 })
             })
 
-        it('gets a post comments', () => {
+        it('gets comments from a post', () => {
 
             cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
                 .then((response) => {
@@ -160,15 +172,15 @@ describe('happy path api tests', () => {
 
     context('user tests', () => {
         const userId = 1
-        let userName = ''
+        let userObject
 
         it('gets an user', () => {
 
             cy.api('GET', `https://jsonplaceholder.typicode.com/users/${userId}`)
                 .then((response) => {
-                    userName = response.body.name
+                    userObject = response.body
                     expect(response.status).to.eq(200)
-                    cy.wrap(userName)
+                    cy.wrap(userObject)
                 })
         })
 
@@ -183,35 +195,103 @@ describe('happy path api tests', () => {
 
         it('creates an user', () => {
     
-            const name = faker.name.fullName()
+            const fakeUser = {
+                name: faker.name.fullName(),
+                username: faker.internet.userName(),
+                email: faker.internet.email().toLowerCase(),
+                address: {
+                    street: faker.address.streetName(),
+                    suite: faker.address.secondaryAddress(),
+                    city: faker.address.cityName(),
+                    zipcode: faker.address.zipCode(),
+                    geo: {
+                        lat: faker.address.latitude(),
+                        lng: faker.address.longitude(),
+                    }
+                },
+                phone: faker.phone.number(),
+                website: faker.random.word().toLowerCase() + '.com',
+                company: {
+                    name: faker.random.words(2),
+                    catchPhrase: faker.random.words(4),
+                    bs: faker.random.words(3)
+                }
+            }
             
             cy.api('POST', 'https://jsonplaceholder.typicode.com/users', {
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                body: {
-                    name: name
-                }
+                    name: fakeUser.name,
+                    username: fakeUser.username,
+                    email: fakeUser.email,
+                    address: {
+                        street: fakeUser.address.street,
+                        suite: fakeUser.address.suite,
+                        city: fakeUser.address.city,
+                        zipcode: fakeUser.address.zipcode,
+                        geo: {
+                        lat: fakeUser.address.geo.lat,
+                        lng: fakeUser.address.geo.lng,
+                        }
+                    },
+                    phone: fakeUser.phone,
+                    website: fakeUser.website,
+                    company: {
+                        name: fakeUser.company.name,
+                        catchPhrase: fakeUser.company.catchPhrase,
+                        bs: fakeUser.company.bs
+                    }
             })
             .then((response) => {
                 expect(response.status).to.eq(201)
-                expect(response.body.body.name).to.eq(name)
+                expect(response.body.name).to.eq(fakeUser.name)
+                expect(response.body.id).to.eq(11)
             })
         })
 
         it('updates an user', () => {
     
-            const editedName = userName + ' edited'
+            const editedName = userObject.name + ' edited'
     
             cy.api('PUT', `https://jsonplaceholder.typicode.com/users/${userId}`, {
-                body: {
-                    name: editedName
-                }
+                    id: 1,
+                    name: editedName,
+                    username: "Bret",
+                    email: "Sincere@april.biz",
+                    address: {
+                        street: "Kulas Light",
+                        suite: "Apt. 556",
+                        city: "Gwenborough",
+                        zipcode: "92998-3874",
+                        geo: {
+                        lat: "-37.3159",
+                        lng: "81.1496"
+                        }
+                    },
+                    phone: "1-770-736-8031 x56442",
+                    website: "hildegard.org",
+                    company: {
+                        name: "Romaguera-Crona",
+                        catchPhrase: "Multi-layered client-server neural-net",
+                        bs: "harness real-time e-markets"
+                    }
             })
             .then((response) => {
                 expect(response.status).to.eq(200)
-                expect(response.body.body.name).not.to.eq(userName)
-                expect(response.body.body.name).to.eq(editedName)
+                expect(response.body.name).not.to.eq(userObject.name)
+                expect(response.body.name).to.eq(editedName)
+            })
+        })
+
+        it('patches an user', () => {
+
+            cy.api('PATCH', `https://jsonplaceholder.typicode.com/users/${userId}`, {
+                    username: 'foo',
+                    website: 'bar'
+            })
+            .then((response) => {
+                expect(response.body.username).to.eq('foo')
+                expect(response.body.website).to.eq('bar')
+                expect(response.body.username).not.to.eq(userObject.username)
+                expect(response.body.website).not.to.eq(userObject.website)
             })
         })
 
