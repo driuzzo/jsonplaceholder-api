@@ -160,7 +160,7 @@ describe('happy path api tests', () => {
 
     context('user tests', () => {
         const userId = 1
-        let userName =
+        let userName = ''
 
         it('gets an user', () => {
 
@@ -173,8 +173,7 @@ describe('happy path api tests', () => {
         })
 
         it('gets all posts from an user', () => {
-            let postsPerUser
-
+            
             cy.api('GET', `https://jsonplaceholder.typicode.com/posts?userId=${userId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
