@@ -1,12 +1,11 @@
 /// <reference types="cypress" />
 
 const { faker } = require('@faker-js/faker')
-
-
+const userId = 1
 
 describe('happy path api tests', () => {
 
-    context.skip('gets all resources', () => {
+    context('gets all resources', () => {
 
         it('gets all posts', () => {
 
@@ -171,7 +170,6 @@ describe('happy path api tests', () => {
     })
 
     context('user tests', () => {
-        const userId = 1
         let userObject
 
         it('gets an user', () => {
@@ -301,6 +299,45 @@ describe('happy path api tests', () => {
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
+                })
+        })
+    })
+
+    context('todo tests', () => {
+
+        const todoId = 1
+        let todoObject
+
+        it('gets a todo', () => {
+
+            cy.api('GET', `https://jsonplaceholder.typicode.com/todos/${todoId}`)
+                .then((response) => {
+                    todoObject = response.body
+                    expect(response.status).to.eq(200)
+                    expect(response.body.completed).to.eq(false)
+                    cy.wrap(todoObject)
+                })
+        })
+
+        it('gets all todos from an user', () => {
+
+            let incompleteTodo = 0
+            let completeTodo = 0
+
+            cy.api('GET', `https://jsonplaceholder.typicode.com/todos?userId=${userId}`)
+                .then((response) => {
+                    console.log(response)
+
+                    for(var index in response.body) {
+                        if (response.body[index].completed == false) {
+                            incompleteTodo = incompleteTodo +1;
+                        }
+                        else {
+                            completeTodo = completeTodo +1;
+                        }
+                    }
+                    expect(incompleteTodo).to.eq(9)
+                    expect(completeTodo).to.eq(11)
                 })
         })
     })
