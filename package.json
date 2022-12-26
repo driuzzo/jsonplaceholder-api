@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/driuzzo/jsonplaceholder-api#readme",
   "dependencies": {
-    "cypress": "^12.0.2",
-    "cypress-plugin-api": "^2.6.1"
   },
   "devDependencies": {
+    "cypress": "^12.0.2",
+    "cypress-plugin-api": "^2.6.1",
     "@faker-js/faker": "^7.6.0"
   }
 }
