@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 const { faker } = require('@faker-js/faker')
-const userId = 9
 
 describe('happy path api tests', () => {
 
@@ -582,7 +581,7 @@ describe('happy path api tests', () => {
                 })
             })
 
-        it.only('counts comments from a post', () => {
+        it('counts comments from a post', () => {
             cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${ids.postId}/comments`)
                 .then((response) => {
                     expect(response.body.length).to.eq(5)
