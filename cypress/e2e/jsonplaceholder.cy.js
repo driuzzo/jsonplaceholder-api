@@ -37,7 +37,7 @@ describe('happy path api tests', () => {
 
             let postsPerUser = 0;
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/posts')
+            cy.api('GET', '/posts')
                 .then((response) => {
 
                     lengths.postslength = response.body.length
@@ -56,7 +56,7 @@ describe('happy path api tests', () => {
 
         it('gets a post', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${ids.postId}`)
+            cy.api('GET', `/posts/${ids.postId}`)
                 .then((response) => {
                     objects.postObject = response.body
                     expect(response.status).to.eq(200)
@@ -73,7 +73,7 @@ describe('happy path api tests', () => {
                 body: faker.random.words(4)
             }
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/posts', {
+            cy.api('POST', '/posts', {
                 userId: fakePost.userId,
                 id: fakePost.id,
                 title: fakePost.title,
@@ -91,7 +91,7 @@ describe('happy path api tests', () => {
     
             const editedPost = objects.postObject.title + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/posts/${ids.postId}`, {    
+            cy.api('PUT', `/posts/${ids.postId}`, {    
                 userId: objects.postObject.userid,
                 id: objects.postObject.id,
                 title: editedPost,
@@ -106,7 +106,7 @@ describe('happy path api tests', () => {
 
         it('patches a post', () => {
 
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/posts/${ids.postId}`, {
+            cy.api('PATCH', `/posts/${ids.postId}`, {
                 title: 'foo',
                 body: 'bar'
             })
@@ -120,7 +120,7 @@ describe('happy path api tests', () => {
     
         it('deletes a post', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/posts/${ids.postId}`)
+            cy.api('DELETE', `/posts/${ids.postId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
@@ -129,7 +129,7 @@ describe('happy path api tests', () => {
 
         it('gets comments from a post', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${ids.postId}/comments`)
+            cy.api('GET', `/posts/${ids.postId}/comments`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body.length).to.eq(5)
@@ -141,7 +141,7 @@ describe('happy path api tests', () => {
 
         it('gets all users', () => {
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/users')
+            cy.api('GET', '/users')
                 .then((response) => {
                     lengths.userslength = response.body.length
 
@@ -152,7 +152,7 @@ describe('happy path api tests', () => {
 
         it('gets an user', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/users/${ids.userId}`)
+            cy.api('GET', `/users/${ids.userId}`)
                 .then((response) => {
                     objects.userObject = response.body
                     expect(response.status).to.eq(200)
@@ -162,7 +162,16 @@ describe('happy path api tests', () => {
 
         it('gets all posts from an user', () => {
             
-            cy.api('GET', `https://jsonplaceholder.typicode.com/users/${ids.userId}/posts`)
+            cy.api('GET', `/users/${ids.userId}/posts`)
+                .then((response) => {
+                    expect(response.status).to.eq(200)
+                    expect(response.body.length).to.eq(10)
+                })
+        })
+
+        it('gets all albums from an user', () => {
+            
+            cy.api('GET', `/users/${ids.userId}/albums`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body.length).to.eq(10)
@@ -194,7 +203,7 @@ describe('happy path api tests', () => {
                 }
             }
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/users', {
+            cy.api('POST', '/users', {
                     name: fakeUser.name,
                     username: fakeUser.username,
                     email: fakeUser.email,
@@ -227,7 +236,7 @@ describe('happy path api tests', () => {
     
             const editedName = objects.userObject.name + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/users/${ids.userId}`, {
+            cy.api('PUT', `/users/${ids.userId}`, {
                     id: objects.userObject.id,
                     name: editedName,
                     username: objects.userObject.username,
@@ -259,7 +268,7 @@ describe('happy path api tests', () => {
 
         it('patches an user', () => {
 
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/users/${ids.userId}`, {
+            cy.api('PATCH', `/users/${ids.userId}`, {
                     username: 'foo',
                     website: 'bar'
             })
@@ -274,7 +283,7 @@ describe('happy path api tests', () => {
 
         it('deletes an user', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/users/${ids.userId}`)
+            cy.api('DELETE', `/users/${ids.userId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
@@ -287,7 +296,7 @@ describe('happy path api tests', () => {
         it('gets all todos', () => {
             let todosPerUser = 0
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/todos')
+            cy.api('GET', '/todos')
                 .then((response) => {
                     lengths.todoslength = response.body.length
 
@@ -305,7 +314,7 @@ describe('happy path api tests', () => {
 
         it('gets a todo', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/todos/${ids.todoId}`)
+            cy.api('GET', `/todos/${ids.todoId}`)
                 .then((response) => {
                     objects.todoObject = response.body
                     expect(response.status).to.eq(200)
@@ -321,7 +330,7 @@ describe('happy path api tests', () => {
             let incompleteTodo = 0
             let completeTodo = 0
 
-            cy.request('GET', `https://jsonplaceholder.typicode.com/users/${ids.userId}/todos`)
+            cy.request('GET', `/users/${ids.userId}/todos`)
                 .then((response) => {
                     userObject = response.body
 
@@ -335,7 +344,7 @@ describe('happy path api tests', () => {
                     }
                 })
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/todos?userId=${ids.userId}`)
+            cy.api('GET', `/todos?userId=${ids.userId}`)
                 .then((response) => {
 
                     for(var index in response.body) {
@@ -359,7 +368,7 @@ describe('happy path api tests', () => {
                 completed: faker.datatype.boolean()
             }
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/todos', {
+            cy.api('POST', '/todos', {
                     userId: fakeTodo.userId,
                     title: fakeTodo.title,
                     completed: fakeTodo.completed
@@ -377,7 +386,7 @@ describe('happy path api tests', () => {
     
             const editedTodo = objects.todoObject.title + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/todos/${ids.todoId}`, {
+            cy.api('PUT', `/todos/${ids.todoId}`, {
                     userId: objects.todoObject.userId,
                     title: editedTodo,
                     completed: objects.todoObject.completed
@@ -398,7 +407,7 @@ describe('happy path api tests', () => {
                 completed = false
             }
 
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/todos/${ids.todoId}`, {
+            cy.api('PATCH', `/todos/${ids.todoId}`, {
                     title: 'foo',
                     completed: completed
             })
@@ -412,7 +421,7 @@ describe('happy path api tests', () => {
 
         it('deletes a todo', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/todos/${ids.todoId}`)
+            cy.api('DELETE', `/todos/${ids.todoId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
@@ -424,7 +433,7 @@ describe('happy path api tests', () => {
 
         it('gets all albums', () => {
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/albums')
+            cy.api('GET', '/albums')
                 .then((response) => {
                     lengths.albumslength = response.body.length
 
@@ -434,7 +443,7 @@ describe('happy path api tests', () => {
         })
         
         it('gets an album', () => {
-            cy.api('GET', `https://jsonplaceholder.typicode.com/albums/${ids.albumId}`)
+            cy.api('GET', `/albums/${ids.albumId}`)
                 .then((response) => {
                     objects.albumObject = response.body
                     expect(response.status).to.eq(200)
@@ -449,7 +458,7 @@ describe('happy path api tests', () => {
                 title: faker.random.words(4)
             }
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/albums', {
+            cy.api('POST', '/albums', {
                     userId: fakeAlbum.userId,
                     title: fakeAlbum.title
             })
@@ -465,7 +474,7 @@ describe('happy path api tests', () => {
     
             const editedAlbum = objects.albumObject.title + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/albums/${ids.albumId}`, {
+            cy.api('PUT', `/albums/${ids.albumId}`, {
                     id: objects.albumObject.id,
                     userId: objects.albumObject.userId,
                     title: editedAlbum
@@ -479,7 +488,7 @@ describe('happy path api tests', () => {
 
         it('patches an album', () => {
             
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/albums/${ids.albumId}`, {
+            cy.api('PATCH', `/albums/${ids.albumId}`, {
                     title: 'foo'
             })
             .then((response) => {
@@ -490,7 +499,7 @@ describe('happy path api tests', () => {
 
         it('deletes an album', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/albums/${ids.albumId}`)
+            cy.api('DELETE', `/albums/${ids.albumId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
@@ -502,7 +511,7 @@ describe('happy path api tests', () => {
         
         it('gets all comments', () => {
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/comments')
+            cy.api('GET', '/comments')
                 .then((response) => {
                     lengths.commentslength = response.body.length
 
@@ -513,7 +522,7 @@ describe('happy path api tests', () => {
 
         it('gets a comment', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/comments/${ids.commentId}`)
+            cy.api('GET', `/comments/${ids.commentId}`)
                 .then((response) => {
                     objects.commentObject = response.body
                     expect(response.status).to.eq(200)
@@ -531,7 +540,7 @@ describe('happy path api tests', () => {
             }
 
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/comments', {     
+            cy.api('POST', '/comments', {     
                 id: fakeComment.id,
                 name: fakeComment.name,
                 email: fakeComment.email,
@@ -548,7 +557,7 @@ describe('happy path api tests', () => {
     
             const commentEdited = objects.commentObject.body + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/comments/${ids.commentId}`, {    
+            cy.api('PUT', `/comments/${ids.commentId}`, {    
                 id: objects.commentObject.id,
                 name: objects.commentObject.name,
                 email: objects.commentObject.email,
@@ -563,7 +572,7 @@ describe('happy path api tests', () => {
 
         it('patches a comment', () => {
 
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/comments/${ids.commentId}`, {
+            cy.api('PATCH', `/comments/${ids.commentId}`, {
                 body: 'foo'
             })
             .then((response) => {
@@ -574,26 +583,19 @@ describe('happy path api tests', () => {
     
         it('deletes a comment', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/comments/${ids.commentId}`)
+            cy.api('DELETE', `/comments/${ids.commentId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
                 })
             })
-
-        it('counts comments from a post', () => {
-            cy.api('GET', `https://jsonplaceholder.typicode.com/posts/${ids.postId}/comments`)
-                .then((response) => {
-                    expect(response.body.length).to.eq(5)
-                })
-        })
     })
 
     context('photo tests', () => {
 
         it('gets all photos', () => {
             
-            cy.api('GET', 'https://jsonplaceholder.typicode.com/photos')
+            cy.api('GET', '/photos')
                 .then((response) => {
                     lengths.photoslength = response.body.length
 
@@ -604,7 +606,7 @@ describe('happy path api tests', () => {
 
         it('gets a photo', () => {
 
-            cy.api('GET', `https://jsonplaceholder.typicode.com/photos/${ids.photoId}`)
+            cy.api('GET', `/photos/${ids.photoId}`)
                 .then((response) => {
                     objects.photoObject = response.body
                     expect(response.status).to.eq(200)
@@ -624,7 +626,7 @@ describe('happy path api tests', () => {
                 thumbnailUrl: 'https://via.placeholder.com/150/' + color
             }
             
-            cy.api('POST', 'https://jsonplaceholder.typicode.com/photos', {
+            cy.api('POST', '/photos', {
                     albumId: fakePhoto.albumId,
                     id: fakePhoto.id,
                     title: fakePhoto.title,
@@ -642,7 +644,7 @@ describe('happy path api tests', () => {
     
             const editedPhoto = objects.photoObject.title + ' edited'
     
-            cy.api('PUT', `https://jsonplaceholder.typicode.com/photos/${ids.photoId}`, {
+            cy.api('PUT', `/photos/${ids.photoId}`, {
                 albumId: objects.photoObject.albumId,
                 id: objects.photoObject.id,
                 title: editedPhoto,
@@ -658,7 +660,7 @@ describe('happy path api tests', () => {
 
         it('patches a photo', () => {
 
-            cy.api('PATCH', `https://jsonplaceholder.typicode.com/photos/${ids.photoId}`, {
+            cy.api('PATCH', `/photos/${ids.photoId}`, {
                     title: 'foo'
             })
             .then((response) => {
@@ -670,11 +672,20 @@ describe('happy path api tests', () => {
 
         it('deletes a photo', () => {
     
-            cy.api('DELETE', `https://jsonplaceholder.typicode.com/photos/${ids.photoId}`)
+            cy.api('DELETE', `/photos/${ids.photoId}`)
                 .then((response) => {
                     expect(response.status).to.eq(200)
                     expect(response.body).to.be.empty
                 })
+        })
+
+        it('gets photos from an album', () => {
+    
+            cy.api('GET', `/albums/${ids.albumId}/photos`)
+                .then((response) => {
+                    expect(response.status).to.eq(200)
+                    expect(response.body.length).to.eq(50)
+            })
         })
     })
 })
