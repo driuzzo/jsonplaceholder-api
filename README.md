@@ -1,9 +1,8 @@
 # Testes de API com Cypress.
 
-API utilizada: [jsonplaceholder](https://jsonplaceholder.typicode.com/guide/)
-
-
 Projeto de automação num API de estudos para portfólio pessoal.
+
+API utilizada: [jsonplaceholder](https://jsonplaceholder.typicode.com/guide/)
 
 Clone o projeto
 
